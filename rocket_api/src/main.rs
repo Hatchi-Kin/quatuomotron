@@ -54,7 +54,23 @@ fn get_count(state: &State<DbConn>) -> Result<Json<i64>, String> {
     Ok(Json(count))
 }
 
-
+// Route handler to get all people in the database
+#[get("/people")]
+fn get_people(state: &State<DbConn>) -> Result<Json<Vec<Person>>, String> {
+    let conn = state.conn.lock().map_err(|_| "Failed to acquire lock".to_string())?;
+    let mut stmt = conn.prepare("SELECT nom, prenom, email FROM person").map_err(|e| e.to_string())?;
+    let mut rows = stmt.query([]).map_err(|e| e.to_string())?;
+    let mut people = Vec::new();
+    while let Some(row) = rows.next().map_err(|e| e.to_string())? {
+        let person = Person {
+            nom: row.get(0).map_err(|e| e.to_string())?,
+            prenom: row.get(1).map_err(|e| e.to_string())?,
+            email: row.get(2).map_err(|e| e.to_string())?,
+        };
+        people.push(person);
+    }
+    Ok(Json(people))
+}
 
 // Route handler to generate groups of people
 #[get("/groups/<group_size>")]
@@ -114,5 +130,5 @@ fn rocket() -> Rocket<Build> {
     let conn = Connection::open("people.db").expect("Failed to open database");
     rocket::build()
         .manage(DbConn { conn: Mutex::new(conn) })
-        .mount("/", routes![index, favicon, get_count, generate_groups, save_groups])
+        .mount("/", routes![index, favicon, get_count, get_people, generate_groups, save_groups])
 }

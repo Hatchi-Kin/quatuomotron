@@ -1,0 +1,13 @@
+[package]
+name = "quatuomotron"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+rusqlite = "0.32.1"
+rand = "0.8"
+chrono = "0.4"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+rocket = { version = "0.5.0-rc.2", features = ["json", "tls"] }
+

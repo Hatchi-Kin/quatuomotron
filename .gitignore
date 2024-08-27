@@ -1,0 +1,9 @@
+# Ignore build artifacts
+rocket_api/target
+
+# Ignore IDE/editor specific files
+*.rs.bk
+*.swp
+*.swo
+.idea/
+.vscode/

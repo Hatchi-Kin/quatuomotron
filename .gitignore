@@ -1,5 +1,5 @@
 # Ignore build artifacts
-/target
+rocket_api/target
 
 # Ignore IDE/editor specific files
 *.rs.bk

@@ -1,0 +1,11 @@
+/home/artemis/Documents/Projets/binomontron/quatuomotron/target/debug/deps/libuncased-aa334a7aeba4eb97.rmeta: /home/artemis/.cargo/registry/src/index.crates.io-6f17d22bba15001f/uncased-0.9.10/src/lib.rs /home/artemis/.cargo/registry/src/index.crates.io-6f17d22bba15001f/uncased-0.9.10/src/serde.rs /home/artemis/.cargo/registry/src/index.crates.io-6f17d22bba15001f/uncased-0.9.10/src/owned.rs /home/artemis/.cargo/registry/src/index.crates.io-6f17d22bba15001f/uncased-0.9.10/src/borrowed.rs /home/artemis/.cargo/registry/src/index.crates.io-6f17d22bba15001f/uncased-0.9.10/src/as_uncased.rs
+
+/home/artemis/Documents/Projets/binomontron/quatuomotron/target/debug/deps/libuncased-aa334a7aeba4eb97.rlib: /home/artemis/.cargo/registry/src/index.crates.io-6f17d22bba15001f/uncased-0.9.10/src/lib.rs /home/artemis/.cargo/registry/src/index.crates.io-6f17d22bba15001f/uncased-0.9.10/src/serde.rs /home/artemis/.cargo/registry/src/index.crates.io-6f17d22bba15001f/uncased-0.9.10/src/owned.rs /home/artemis/.cargo/registry/src/index.crates.io-6f17d22bba15001f/uncased-0.9.10/src/borrowed.rs /home/artemis/.cargo/registry/src/index.crates.io-6f17d22bba15001f/uncased-0.9.10/src/as_uncased.rs
+
+/home/artemis/Documents/Projets/binomontron/quatuomotron/target/debug/deps/uncased-aa334a7aeba4eb97.d: /home/artemis/.cargo/registry/src/index.crates.io-6f17d22bba15001f/uncased-0.9.10/src/lib.rs /home/artemis/.cargo/registry/src/index.crates.io-6f17d22bba15001f/uncased-0.9.10/src/serde.rs /home/artemis/.cargo/registry/src/index.crates.io-6f17d22bba15001f/uncased-0.9.10/src/owned.rs /home/artemis/.cargo/registry/src/index.crates.io-6f17d22bba15001f/uncased-0.9.10/src/borrowed.rs /home/artemis/.cargo/registry/src/index.crates.io-6f17d22bba15001f/uncased-0.9.10/src/as_uncased.rs
+
+/home/artemis/.cargo/registry/src/index.crates.io-6f17d22bba15001f/uncased-0.9.10/src/lib.rs:
+/home/artemis/.cargo/registry/src/index.crates.io-6f17d22bba15001f/uncased-0.9.10/src/serde.rs:
+/home/artemis/.cargo/registry/src/index.crates.io-6f17d22bba15001f/uncased-0.9.10/src/owned.rs:
+/home/artemis/.cargo/registry/src/index.crates.io-6f17d22bba15001f/uncased-0.9.10/src/borrowed.rs:
+/home/artemis/.cargo/registry/src/index.crates.io-6f17d22bba15001f/uncased-0.9.10/src/as_uncased.rs:

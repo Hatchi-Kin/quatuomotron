@@ -1,24 +1,18 @@
 #[macro_use] extern crate rocket;
 
-use rusqlite::{params, Connection, Result};
+use rocket::{get, post, routes, Build, Rocket, State};
+use rocket::http::Header;
+use rocket::response::content::RawHtml;
+use rocket::serde::{json::Json, Serialize, Deserialize};
+use rocket::fairing::{Fairing, Info, Kind};
+use rocket::Request;
+use rocket::Response;
+use rusqlite::{params, Connection};
+use std::sync::Mutex;
 use rand::seq::SliceRandom;
 use rand::thread_rng;
-use rocket::serde::{json::Json, Deserialize, Serialize};
 use chrono::Utc;
-use std::sync::Mutex;
-use rocket::State;
-use rocket::{get, launch, routes, Build, Rocket};
-use rocket::response::content::RawHtml;
-use rocket::fs::NamedFile;
-use std::path::PathBuf;
 
-// Struct representing a group of people
-#[derive(Serialize, Deserialize)]
-struct Group {
-    members: Vec<Person>,
-}
-
-// Struct representing a person
 #[derive(Serialize, Deserialize, Clone)]
 struct Person {
     nom: String,
@@ -26,24 +20,40 @@ struct Person {
     email: String,
 }
 
-// Struct for managing database connection
+#[derive(Serialize, Deserialize)]
+struct Group {
+    members: Vec<Person>,
+}
+
+// Fairing pour ajouter les en-têtes CORS
+pub struct CORS;
+
+#[rocket::async_trait]
+impl Fairing for CORS {
+    fn info(&self) -> Info {
+        Info {
+            name: "Add CORS headers",
+            kind: Kind::Response,
+        }
+    }
+
+    async fn on_response<'r>(&self, _request: &'r Request<'_>, response: &mut Response<'r>) {
+        response.set_header(Header::new("Access-Control-Allow-Origin", "*"));
+        response.set_header(Header::new("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS"));
+        response.set_header(Header::new("Access-Control-Allow-Headers", "*"));
+    }
+}
+
+// Struct pour gérer la connexion à la base de données
 struct DbConn {
     conn: Mutex<Connection>,
 }
 
-// Route handler for the root path
 #[get("/")]
 fn index() -> RawHtml<&'static str> {
     RawHtml("<div style='text-align: center;'><h1>🚀 Welcome to the Rocket Quatuomotron API!</h1></div>")
 }
 
-// Route handler to serve the favicon
-#[get("/favicon.ico")]
-async fn favicon() -> Option<NamedFile> {
-    NamedFile::open(PathBuf::from("static/favicon.ico")).await.ok()
-}
-
-// Route handler to get the count of people in the database
 #[get("/count")]
 fn get_count(state: &State<DbConn>) -> Result<Json<i64>, String> {
     let conn = state.conn.lock().map_err(|_| "Failed to acquire lock".to_string())?;
@@ -54,7 +64,6 @@ fn get_count(state: &State<DbConn>) -> Result<Json<i64>, String> {
     Ok(Json(count))
 }
 
-// Route handler to get all people in the database
 #[get("/people")]
 fn get_people(state: &State<DbConn>) -> Result<Json<Vec<Person>>, String> {
     let conn = state.conn.lock().map_err(|_| "Failed to acquire lock".to_string())?;
@@ -72,7 +81,6 @@ fn get_people(state: &State<DbConn>) -> Result<Json<Vec<Person>>, String> {
     Ok(Json(people))
 }
 
-// Route handler to generate groups of people
 #[get("/groups/<group_size>")]
 fn generate_groups(state: &State<DbConn>, group_size: usize) -> Result<Json<Vec<Group>>, String> {
     let conn = state.conn.lock().map_err(|_| "Failed to acquire lock".to_string())?;
@@ -99,7 +107,6 @@ fn generate_groups(state: &State<DbConn>, group_size: usize) -> Result<Json<Vec<
     Ok(Json(groups))
 }
 
-// Route handler to save groups of people to the database
 #[post("/save_groups", data = "<groups>")]
 fn save_groups(state: &State<DbConn>, groups: Json<Vec<Group>>) -> Result<String, String> {
     let conn = state.conn.lock().map_err(|_| "Failed to acquire lock".to_string())?;
@@ -124,11 +131,11 @@ fn save_groups(state: &State<DbConn>, groups: Json<Vec<Group>>) -> Result<String
     Ok("Groups saved to the database.".to_string())
 }
 
-// Rocket launch function to start the server and mount the routes
 #[launch]
 fn rocket() -> Rocket<Build> {
     let conn = Connection::open("people.db").expect("Failed to open database");
     rocket::build()
         .manage(DbConn { conn: Mutex::new(conn) })
-        .mount("/", routes![index, favicon, get_count, get_people, generate_groups, save_groups])
+        .attach(CORS) // Attacher le fairing CORS pour gérer les requêtes cross-origin
+        .mount("/", routes![index, get_count, get_people, generate_groups, save_groups])
 }

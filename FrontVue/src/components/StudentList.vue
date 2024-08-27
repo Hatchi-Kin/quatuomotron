@@ -1,38 +1,97 @@
-<template>
-  <div>
-    <h1>Liste des Élèves</h1>
-    <ul>
-      <li v-for="student in students" :key="student.id">
-        {{ student.nom }} - {{ student.prenom }} - {{ student.email }}
+` <template>
+  <div class="student-list">
+    <h2>Liste des étudiants</h2>
+
+    <div class="controls">
+      <label for="route-select">Choisissez une action :</label>
+      <select v-model="selectedRoute" @change="fetchData">
+        <option value="people">Afficher tous les étudiants</option>
+        <option value="count">Afficher le nombre d'étudiants</option>
+        <option value="groups/2">Générer des groupes de 2</option>
+        <option value="groups/3">Générer des groupes de 3</option>
+      </select>
+    </div>
+
+    <div v-if="error" class="error">
+      <p>Erreur : {{ error }}</p>
+    </div>
+
+    <ul v-if="students.length > 0">
+      <li v-for="(student, index) in students" :key="index">
+        <strong>{{ student.nom }} {{ student.prenom }}</strong> - {{ student.email }}
       </li>
     </ul>
+
+    <p v-else-if="count !== null">
+      Nombre d'étudiants : {{ count }}
+    </p>
+
+    <p v-else>
+      Aucune donnée disponible.
+    </p>
   </div>
 </template>
 
 <script>
 export default {
+  name: "StudentList",
   data() {
     return {
-      students: []
+      students: [],
+      count: null,
+      selectedRoute: "people",
+      error: null,
     };
   },
-  created() {
-    this.fetchStudents();
-  },
   methods: {
-    async fetchStudents() {
+    async fetchData() {
+      this.error = null;
+      this.students = [];
+      this.count = null;
+
+      let url = `http://localhost:8000/${this.selectedRoute}`;
+
       try {
-        const response = await fetch('http://localhost:8000/api/students');  // Assurez-vous que l'URL correspond à votre backend en Rust
-        const data = await response.json();
-        this.students = data;
+        const response = await fetch(url);
+        if (!response.ok) {
+          throw new Error("Erreur lors de la récupération des données");
+        }
+
+        if (this.selectedRoute === "count") {
+          const data = await response.json();
+          this.count = data;
+        } else {
+          const data = await response.json();
+          this.students = data;
+        }
       } catch (error) {
-        console.error('Error fetching students:', error);
+        this.error = error.message;
       }
-    }
-  }
+    },
+  },
+  mounted() {
+    this.fetchData();
+  },
 };
 </script>
 
 <style scoped>
-/* Ajoutez vos styles ici */
+.controls {
+  margin-bottom: 20px;
+}
+
+.error {
+  color: red;
+}
+
+.student-list ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.student-list li {
+  font-size: 18px;
+  margin: 5px 0;
+}
 </style>
+`

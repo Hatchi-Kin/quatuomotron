@@ -1,27 +1,33 @@
 use rand::seq::SliceRandom;
 use rand::thread_rng;
+use rusqlite::{Connection, Result};
 use std::io::{self, Write};
 
-fn main() {
-    // Lecture du nombre d'élèves
-    let mut input = String::new();
-    print!("Entrez le nombre d'élèves : ");
-    io::stdout().flush().unwrap();
-    io::stdin().read_line(&mut input).unwrap();
-    let nombre_eleves: usize = input.trim().parse().expect("Veuillez entrer un nombre valide.");
+fn main() -> Result<()> {
+    // Connexion à la base de données SQLite
+    let conn = Connection::open("eleves.db")?;
 
-    // Lecture des noms d'élèves
-    let mut eleves = Vec::new();
-    for i in 1..=nombre_eleves {
-        input.clear();
-        print!("Entrez le nom de l'élève {} : ", i);
-        io::stdout().flush().unwrap();
-        io::stdin().read_line(&mut input).unwrap();
-        eleves.push(input.trim().to_string());
+    // Récupération des noms des élèves depuis la base de données
+    let mut stmt = conn.prepare("SELECT nom FROM eleves")?;
+    let eleves_iter = stmt.query_map([], |row| {
+        let nom: String = row.get(0)?;
+        Ok(nom)
+    })?;
+
+    // Stocker les noms d'élèves dans un vecteur
+    let mut eleves: Vec<String> = Vec::new();
+    for eleve in eleves_iter {
+        eleves.push(eleve?);
+    }
+
+    // Vérification du nombre d'élèves
+    if eleves.is_empty() {
+        println!("Aucun élève trouvé dans la base de données !");
+        return Ok(());
     }
 
     // Choix de la méthode de regroupement
-    input.clear();
+    let mut input = String::new();
     print!("Voulez-vous spécifier le nombre d'élèves par groupe (1) ou le nombre de groupes (2) ? Entrez 1 ou 2 : ");
     io::stdout().flush().unwrap();
     io::stdin().read_line(&mut input).unwrap();
@@ -51,7 +57,7 @@ fn main() {
         }
         _ => {
             println!("Choix non valide. Terminaison du programme.");
-            return;
+            return Ok(());
         }
     };
 
@@ -59,6 +65,8 @@ fn main() {
     for (i, groupe) in groupes.iter().enumerate() {
         println!("Groupe {}: {:?}", i + 1, groupe);
     }
+
+    Ok(())
 }
 
 fn former_groupes_par_taille(eleves: &[String], taille_groupe: usize) -> Vec<Vec<String>> {

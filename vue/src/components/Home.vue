@@ -29,7 +29,7 @@ export default {
 }
 
 h1 {
-  color: #42b983;
+  color: #2f5f43;
 }
 
 ul {
@@ -48,7 +48,7 @@ p {
 }
 
 a {
-  color: #42b983;
+  color: #45738b;
   text-decoration: none;
 }
 

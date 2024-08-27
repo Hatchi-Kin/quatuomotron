@@ -23,7 +23,7 @@ export default {
 }
 
 h1 {
-  color: #42b983;
+  color: #2f5f43;
 }
 
 p {

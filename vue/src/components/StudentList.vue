@@ -132,6 +132,6 @@ export default {
 
 .group-header {
   margin-bottom: 10px;
-  color: #42b983; /* Set the color to #42b983 green */
+  color: #2f5f43; /* Set the color to #42b983 green */
 }
 </style>

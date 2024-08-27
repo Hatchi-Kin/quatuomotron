@@ -1,7 +1,7 @@
 <template>
   <div class="services">
     <h1>Nos Services</h1>
-    <p>Voici la liste des étudiants disponibles :</p>
+    <p>Ici, vous pouvez afficher la liste des étudiants, leur nombre et créer des groupes de 2 ou de 3 aléatoirement :</p>
     <student-list></student-list>
   </div>
 </template>

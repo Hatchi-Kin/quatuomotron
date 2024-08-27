@@ -2,7 +2,7 @@
 
 mod db;
 
-use rocket::{get, post, routes, Build, Rocket, State};
+use rocket::{get, post, options, routes, Build, Rocket, State};
 use rocket::http::Header;
 use rocket::response::content::RawHtml;
 use rocket::serde::json::Json;
@@ -69,11 +69,26 @@ fn save_groups(state: &State<DbConn>, groups: Json<Vec<Group>>) -> Result<String
     state.save_groups(groups.into_inner()).map(|_| "Groups saved to the database.".to_string())
 }
 
+#[options("/save_groups")]
+fn options_save_groups() -> &'static str {
+    ""
+}
+
+#[get("/unique_datetimes")]
+fn get_unique_datetimes(state: &State<DbConn>) -> Result<Json<Vec<String>>, String> {
+    state.get_unique_datetimes().map(Json).map_err(|e| e.to_string())
+}
+
+#[get("/groups_by_datetime/<datetime>")]
+fn get_groups_by_datetime(state: &State<DbConn>, datetime: &str) -> Result<Json<Vec<Group>>, String> {
+    state.get_groups_by_datetime(datetime).map(Json).map_err(|e| e.to_string())
+}
+
 #[launch]
 fn rocket() -> Rocket<Build> {
     let conn = Connection::open("people.db").expect("Failed to open database");
     rocket::build()
         .manage(DbConn { conn: Mutex::new(conn) })
         .attach(CORS) // Attacher le fairing CORS pour gérer les requêtes cross-origin
-        .mount("/", routes![index, get_count, get_people, generate_groups, save_groups])
+        .mount("/", routes![index, get_count, get_people, generate_groups, save_groups, options_save_groups, get_unique_datetimes, get_groups_by_datetime])
 }

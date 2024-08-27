@@ -9,8 +9,12 @@
       <li>Vue Router pour la navigation</li>
     </ul>
     <p>
-      <strong>But du projet :</strong> Ce projet a pour objectif de gérer et classer des listes d'étudiants via une interface moderne et performante.
+      <strong>But du projet :</strong> Ce projet a pour objectif de faciliter la création de groupes d'étudiants de manière aléatoire et de les enregistrer pour une utilisation future.
     </p>
+    <p>
+      <strong>But inavoué du projet :</strong> Le but réel du projet est de convaincre un employeur (préférablement suisse et préférablement dans des locaus tout près d'un lac) d'offir aux 4 développeurs de cette application un contrat en CDI et un salaire annuel de 100k €.
+    </p>
+      
     <p>
       <strong>Lien vers le dépôt GitHub :</strong> <a href="https://github.com/Hatchi-Kin/quatuomotron" target="_blank">Voir le repository sur GitHub</a>
     </p>

@@ -17,7 +17,6 @@
         <li>
           <router-link to="/contact">Contact</router-link>
         </li>
-
       </ul>
     </div>
   </nav>
@@ -30,6 +29,8 @@ export default {
 </script>
 
 <style scoped>
+@import url("https://fonts.googleapis.com/css2?family=Rakkas&display=swap");
+
 .navbar {
   background-color: #2f5f43;
   padding: 10px 20px;
@@ -43,8 +44,9 @@ export default {
 
 .navbar-brand a {
   color: white;
-  font-size: 24px;
+  font-size: 42px;
   text-decoration: none;
+  font-family: 'Rakkas', cursive;
 }
 
 .navbar-links {
